@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   View,
+  Text,
   TextInput,
   Alert,
   TouchableOpacity
@@ -60,6 +61,19 @@ class AddNewVideo extends React.Component {
     const { listItemID } = this.props
     return (
       <View>
+        <View style={{
+          borderBottomWidth: 0.5,
+          borderColor: 'grey',
+          backgroundColor: '#bdc1cc'
+        }}>
+          <Text style={{
+            textAlign: 'center',
+            color: 'white',
+            fontSize: 15
+          }}>
+            New video will be added to the end of the list
+          </Text>
+        </View>
         <View style={{
           paddingTop: 21,
           paddingBottom: 21,

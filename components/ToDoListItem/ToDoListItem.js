@@ -1,20 +1,30 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, TextInput } from 'react-native';
 import Swipeable from 'react-native-swipeable';
 import { connect } from 'react-redux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import styles from './styles'
 import {
   removeItemFromToDoList,
   toogleStateImportantIconAction,
-  toogleStateIsCompletedAction
+  toogleStateIsCompletedAction,
+  saveChangedItemAction
 } from '../../actions'
 
 
 
 
 class ToDoListItem extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isEditing: false,
+      changedName: ''
+    }
+  }
+
 
   //переустановить Swipeable в исходное положение
   handleUserBeganScrollingParentView() {
@@ -59,6 +69,28 @@ class ToDoListItem extends React.Component {
     )
   }
 
+  toogleStateIsEditing() {
+    this.setState({
+      isEditing: !this.state.isEditing
+    })
+  }
+  saveChangedItem(id) {
+    this.setState({
+      isEditing: false
+    })
+    if (this.state.changedName.length === 0) {
+      Alert.alert(
+        'Add Name',
+        '',
+        [
+          { text: 'OK' },
+        ]
+      )
+      return
+    }
+    this.props.saveChangedItemAction(id, this.state.changedName)
+  }
+
   render() {
     const { listItem, activePage } = this.props
     const leftButtons = [
@@ -83,28 +115,57 @@ class ToDoListItem extends React.Component {
       </TouchableOpacity>
     ]
 
-    return (
-      <View style={styles.container}>
-        <Swipeable
-          leftButtonWidth={100}
-          onRef={ref => this.swipeable = ref} // для возвращения в исходное положение
-          leftButtons={leftButtons}
-          rightButtons={rightButtons}
-        >
+    if (this.state.isEditing) {
+      return (
+        <View style={styles.container}>
           <View style={styles.listItem}>
-            {/* ссылка на детали */}
             <View style={styles.listItemTextContainer}>
-              <Text onPress={this.goToTheDetails} style={styles.listItemText}>{listItem.name}</Text>
+              <TextInput
+                onChangeText={(value) => this.setState({ changedName: value })}
+                onEndEditing={() => this.saveChangedItem(listItem.id)}
+                style={styles.listItemText}
+                defaultValue={listItem.name}
+                maxLength={20}
+                autoFocus={true}
+              ></TextInput>
             </View>
             <View style={styles.listItemIconContainer}>
-              <TouchableOpacity onPress={() => this.toogleStateIsCompleted(listItem.id, activePage)}>
-                <FontAwesome name={listItem.isCompleted ? 'check-circle' : 'circle-thin'} size={25} color={listItem.isCompleted ? '#2f95dc' : 'grey'} />
+              <TouchableOpacity onPress={() => this.saveChangedItem(listItem.id)}>
+                <Entypo name='save' size={25} color='grey' />
               </TouchableOpacity>
             </View>
           </View>
-        </Swipeable>
-      </View>
-    )
+        </View >
+      )
+    } else {
+      return (
+        <View style={styles.container}>
+          <Swipeable
+            leftButtonWidth={100}
+            onRef={ref => this.swipeable = ref} // для возвращения в исходное положение
+            leftButtons={leftButtons}
+            rightButtons={rightButtons}
+          >
+            <View style={styles.listItem}>
+              {/* ссылка на детали */}
+              <View style={styles.listItemTextContainer}>
+                <Text onPress={this.goToTheDetails} style={styles.listItemText}>{listItem.name}</Text>
+              </View>
+              <View style={styles.listItemIconContainer}>
+                <TouchableOpacity onPress={() => this.toogleStateIsEditing(listItem.id)}>
+                  <Entypo name='edit' size={25} color='grey' />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.listItemIconContainer}>
+                <TouchableOpacity onPress={() => this.toogleStateIsCompleted(listItem.id, activePage)}>
+                  <FontAwesome name={listItem.isCompleted ? 'check-circle' : 'circle-thin'} size={25} color={listItem.isCompleted ? '#2f95dc' : 'grey'} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Swipeable>
+        </View>
+      )
+    }
   }
 }
 
@@ -116,7 +177,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   removeItemFromToDoList,
   toogleStateImportantIconAction,
-  toogleStateIsCompletedAction
+  toogleStateIsCompletedAction,
+  saveChangedItemAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToDoListItem)

@@ -7,6 +7,7 @@ import {
   ADD_NEW_VIDEO,
   TOOGLE_STATE_IMPORTANT_ITEM,
   TOOGLE_STATE_COMPLETED_ITEM,
+  SAVE_CHANGED_ITEM,
   CLEAN_COMPLETED_LIST
 } from '../actionTypes'
 
@@ -46,7 +47,8 @@ export default function toDoItemsReducer(state = initialState, { type, payload }
         name: payload,
         important: false,
         isCompleted: false,
-        created: new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })
+        created: new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }),
+        videos: []
       })
       return {
         ...state
@@ -69,6 +71,12 @@ export default function toDoItemsReducer(state = initialState, { type, payload }
     case TOOGLE_STATE_COMPLETED_ITEM:
       const indexCompletedItem = state.toDoList.findIndex(item => item.id === payload)
       state.toDoList[indexCompletedItem].isCompleted = !state.toDoList[indexCompletedItem].isCompleted
+      return {
+        ...state
+      }
+    case SAVE_CHANGED_ITEM:
+      const indexIsEditingItem = state.toDoList.findIndex(item => item.id === payload.id)
+      state.toDoList[indexIsEditingItem].name = payload.newValue
       return {
         ...state
       }

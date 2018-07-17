@@ -29,5 +29,15 @@ export default StyleSheet.create({
     marginTop: 30,
     marginBottom: 20,
     fontSize: 20
+  },
+  titleTextContainer: {
+    backgroundColor: '#bdc1cc',
+    paddingTop: 5,
+    paddingBottom: 5
+  },
+  titleText: {
+    textAlign: 'center',
+    fontSize: 30,
+    color: 'white'
   }
 });

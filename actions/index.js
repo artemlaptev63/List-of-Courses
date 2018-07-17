@@ -7,6 +7,7 @@ import {
   SEARCH_TO_DO_ITEM_FAILURE,
   REMOVE_ITEM_FROM_TODO_LIST,
   TOOGLE_STATE_INPUT_ADD,
+  SAVE_CHANGED_ITEM,
   ADD_NEW_ITEM,
   ADD_NEW_VIDEO,
   SHOW_PLUS_FOR_ADD_NEW_ITEM,
@@ -99,6 +100,16 @@ export const toogleStateIsCompletedAction = id => dispatch => {
   dispatch({
     type: TOOGLE_STATE_COMPLETED_ITEM,
     payload: id
+  })
+}
+
+export const saveChangedItemAction = (id, newValue) => dispatch => {
+  dispatch({
+    type: SAVE_CHANGED_ITEM,
+    payload: {
+      id: id,
+      newValue: newValue
+    }
   })
 }
 

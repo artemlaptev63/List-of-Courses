@@ -24,7 +24,9 @@ class Detail extends Component {
         {
           stateInputAddVideo ? <AddNewVideo listItemID={listItem.id} /> : null
         }
-
+        <View style={styles.titleTextContainer}>
+          <Text style={styles.titleText}>{listItem.name}</Text>
+        </View>
         <FlatList
           style={{ flex: 1 }}
           data={listItem.videos}

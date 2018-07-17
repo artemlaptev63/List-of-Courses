@@ -27,7 +27,7 @@ export default StyleSheet.create({
   },
   listItemTextContainer: {
     alignItems: 'flex-start',
-    flex: 2
+    flex: 10
   },
   leftSwipeItem: {
     flex: 1,
